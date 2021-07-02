@@ -1,0 +1,29 @@
+from __future__ import division
+import cv2
+import numpy as np
+from pyautogui import *
+import pyautogui
+import time
+import os
+
+
+#screenshot/load image
+myScreenshot = pyautogui.screenshot()
+myScreenshot.save(r'C:\Users\a\Desktop\pythontest\ss.png')
+image = cv2.imread(r'C:\Users\a\Desktop\pythontest\ss.png')
+
+#mask was used to get rid of borders on the game (they made all squares as contours)
+hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+lower_white = np.array([0, 0, 0])
+upper_white = np.array([0,0,0])
+mask = cv2.inRange(hsv, lower_white, upper_white)
+
+#find
+contours, hierarchy = cv2.findContours(mask,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE) 
+contours: cv2.drawContours(image, contours, -1, (0, 255, 0), 3)
+
+#display
+cv2.imshow("window",image)
+cv2.imshow("window",mask)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
