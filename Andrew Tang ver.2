@@ -1,0 +1,51 @@
+from __future__ import division
+import cv2
+import numpy as np
+from pyautogui import *
+import pyautogui
+from pynput.mouse import Button, Controller
+import time
+import os
+import win32con,win32api
+
+#time to get to 2d aimer
+time.sleep(2)
+
+#click function: 1.move mouse to position (x,y) 2.click
+mouse = Controller()
+def click(x,y):
+    mouse.position=(x,y)
+    mouse.click(Button.left,1)
+
+while(True):
+   time.sleep(0.15)
+   #screenshot
+   myScreenshot = pyautogui.screenshot()
+   myScreenshot.save(r'C:\Users\a\Desktop\pythontest\ss.png')
+
+   #load image
+   image = cv2.imread("ss.png")
+
+   #mask
+   hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+   lower_white = np.array([0, 0, 0])
+   upper_white = np.array([0,0,0])
+   mask = cv2.inRange(hsv, lower_white, upper_white)
+
+   #find contours
+   contours, hierarchy = cv2.findContours(mask,cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE) 
+   # to draw the contours: cv2.drawContours(mask, contours, -1, (0, 255, 0), 3)
+
+   for point in contours:
+     M = cv2.moments(point)
+    #https://www.youtube.com/watch?v=AAbUfZD_09s 
+     if M["m00"] != 0:
+          cX = int(M["m10"] / M["m00"])
+          cY = int(M["m01"] / M["m00"])
+     else:
+          cX,cY=0,0
+     if 639<cX<1261 and 258<cY<870 and cX!=951 and cY!=571:
+          click(cX,cY)
+          print("x:",cX,"y:",cY)
+        
+     
