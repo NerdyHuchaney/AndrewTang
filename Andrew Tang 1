@@ -1,0 +1,26 @@
+from pyautogui import *
+import pyautogui
+from pynput.mouse import Button, Controller
+import time
+import win32con,win32api
+
+coordinates=[[716+154*i,330+154*j] for i in range(4) for j in range(4)]
+
+mouse=Controller()
+b=0
+
+def click(x,y):
+    mouse.position=(x,y)
+    mouse.click(Button.left,1)
+
+def check_point(x,y):
+    if pyautogui.pixel(x,y)[0]==0:
+        click(x,y)
+        time.sleep(b)
+
+time.sleep(1)
+while True:
+    for point in coordinates:
+        check_point(point[0],point[1])
+    if pyautogui.pixel(761,613)[0]==23: 
+        break
